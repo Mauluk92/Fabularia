@@ -3,6 +3,7 @@ package it.mauluk92.clockmaker;
 import it.mauluk92.entity.EntityOfFabularia;
 import it.mauluk92.state.State;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.integration.annotation.ServiceActivator;
 
 import java.util.ArrayList;
@@ -14,18 +15,26 @@ import java.util.stream.Collectors;
 public class ClockMaker extends EntityOfFabularia {
 
     private final Scanner mind;
+    private EntityOfFabularia currentPosition;
     private Boolean sigillOfExistence = true;
 
-    public void weave(EntityOfFabularia entity) {
-        List<EntityOfFabularia> options = new ArrayList<>(entity.getChildren());
-        options.add(entity.getParent());
-        List<EntityOfFabularia> availableOptions = options.stream().filter(e -> e.getLock().reveal()).collect(Collectors.toList());
-        int fate = choose(availableOptions);
-        EntityOfFabularia entityChosen = availableOptions.get(fate);
-        entityChosen.reveal();
-        if(sigillOfExistence) {
-            weave(entityChosen);
+    public void weave() {
+        currentPosition.reveal();
+        if(sigillOfExistence && !currentPosition.getChildren().isEmpty()) {
+            List<EntityOfFabularia> options = new ArrayList<>(this.currentPosition.getChildren());
+            options.add(this.currentPosition.getParent());
+            int fate = choose(options);
+            currentPosition = options.get(fate);
+            weave();
+        } else if (sigillOfExistence) {
+            currentPosition = currentPosition.getParent();
+            weave();
         }
+    }
+
+    @ServiceActivator(inputChannel = "reverseSoulChannel")
+    public void navigate(EntityOfFabularia entity){
+        currentPosition = entity;
     }
 
     @ServiceActivator(inputChannel = "soulChannel")

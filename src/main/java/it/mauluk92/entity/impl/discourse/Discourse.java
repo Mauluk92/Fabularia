@@ -1,23 +1,28 @@
 package it.mauluk92.entity.impl.discourse;
 
+import it.mauluk92.command.local.Command;
+import it.mauluk92.command.remote.impl.ManipulateRemoteEntity;
 import it.mauluk92.entity.EntityOfFabularia;
-import it.mauluk92.state.State;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
+
+
+@Getter
+@Setter
 public class Discourse extends EntityOfFabularia {
 
-    private final String content;
-    private final List<State> optionsUnlocked;
-
+    private String content;
     @Override
     public void reveal() {
-        if(getChildren().stream().noneMatch(e -> e.getLock().reveal())){
-            getLock().activate();
-            optionsUnlocked.forEach(State::activate);
-        }
         System.out.println(content);
+        super.reveal();
+        if(getChildren().isEmpty()){
+            setContent("The anomaly disappears and returns to its ethereal prison");
+            System.out.println(content);
+        }
     }
 }

@@ -16,6 +16,12 @@ public class FirstWheelChannelConfig {
     }
 
     @Bean
+    @Qualifier("mainDiscourseAnomalyChannel")
+    public MessageChannel mainDiscourseAnomalyChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
     @Qualifier("soulChannel")
     public MessageChannel soulChannel(){return new DirectChannel();}
 
@@ -40,4 +46,9 @@ public class FirstWheelChannelConfig {
     public MessageChannel thirdMachineChannel(){
         return new DirectChannel();
     }
+
+
+    @Bean
+    @Qualifier("anomalyChannel")
+    public MessageChannel anomalyChannel(){return new DirectChannel();}
 }

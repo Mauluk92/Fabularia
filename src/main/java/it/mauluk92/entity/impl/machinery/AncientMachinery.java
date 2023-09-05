@@ -1,19 +1,25 @@
 package it.mauluk92.entity.impl.machinery;
 
+import it.mauluk92.command.local.Command;
 import it.mauluk92.entity.EntityOfFabularia;
+import it.mauluk92.state.State;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.messaging.Message;
+
+@Getter
+@Setter
 public abstract class AncientMachinery extends EntityOfFabularia {
 
-    public void switchState(String machineName) {
-        String previousState = getLock().toString();
-        getLock().activate();
-        System.out.println("The " + machineName + " alters its state from " + previousState + " to " + getLock());
+    private State state;
+    private String name;
+    public void switchState() {
+        String previousState = state.toString();
+        state.activate();
+        System.out.println("The " + name + " alters its state from " + previousState + " to " + state);
     }
-
-    public abstract Message<Boolean> sendMessage();
-
     @Override
     public String toString() {
-        return getDescription() + "\n The machine currently is in state: " + getLock();
+        return getDescription() + "\n The machine currently is in state: " + state;
     }
 }

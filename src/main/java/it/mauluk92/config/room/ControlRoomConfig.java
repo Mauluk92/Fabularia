@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -26,15 +27,11 @@ public class ControlRoomConfig {
 
         EntityOfFabularia controlRoom = new ControlRoom();
         controlRoom.setDescription("Control room of the first wheel");
-        LifeState state = new LifeState();
-        state.setState(true);
-        controlRoom.setLock(state);
-        controlRoom.setChildren(List.of(firstMachine, secondMachine, thirdMachine, firstMachineLever, secondMachineLever));
-        firstMachine.setParent(controlRoom);
-        secondMachine.setParent(controlRoom);
-        thirdMachine.setParent(controlRoom);
-        firstMachineLever.setParent(controlRoom);
-        secondMachineLever.setParent(controlRoom);
+        controlRoom.pushEntity(firstMachine);
+        controlRoom.pushEntity(secondMachine);
+        controlRoom.pushEntity(thirdMachine);
+        controlRoom.pushEntity(firstMachineLever);
+        controlRoom.pushEntity(secondMachineLever);
         return controlRoom;
     }
 

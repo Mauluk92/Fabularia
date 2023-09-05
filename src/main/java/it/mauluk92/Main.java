@@ -11,7 +11,8 @@ public class Main {
 
         ApplicationContext heart = new AnnotationConfigApplicationContext(HeartOfFabularia.class);
         ClockMaker clockMaker = heart.getBean(ClockMaker.class);
-        MasterWheel masterWheel = heart.getBean("masterWheel", MasterWheel.class);
-        clockMaker.weave(masterWheel);
+        MasterWheel masterWheel = heart.getBean("fabularia", MasterWheel.class);
+        clockMaker.navigate(masterWheel);
+        clockMaker.weave();
     }
 }

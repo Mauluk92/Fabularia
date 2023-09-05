@@ -15,9 +15,8 @@ public class LifeState implements State {
 
     @Override
     public boolean activate() {
-        boolean output = state;
         state = !state;
-        return output;
+        return state;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class SecondWheel extends Wheel {
     public void unlock(Message<Boolean> key){
         if(key.getPayload()){
             System.out.println("You hear a mechanical noise from a distant Wheel");
-            getLock().activate();
+            this.getParent().pushEntity(this);
         }
     }
 }

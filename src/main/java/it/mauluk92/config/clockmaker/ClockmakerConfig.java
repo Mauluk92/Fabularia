@@ -12,10 +12,9 @@ public class ClockmakerConfig {
 
 
     @Bean
-    public ClockMaker clockMaker(Scanner mind, LifeGateway lifeGateway)
+    public ClockMaker clockMaker(Scanner mind)
     {
-        ClockMaker  clockMaker = new ClockMaker(mind);
-        return clockMaker;
+        return new ClockMaker(mind);
     }
 
     @Bean

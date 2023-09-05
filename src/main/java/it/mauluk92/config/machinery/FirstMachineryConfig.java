@@ -1,13 +1,13 @@
 package it.mauluk92.config.machinery;
 
-import it.mauluk92.command.Command;
-import it.mauluk92.config.command.FirstNodeCommandConfig;
+import it.mauluk92.command.remote.impl.ManipulateRemoteEntity;
+import it.mauluk92.config.command.machine.MachineNodeCommandConfig;
 import it.mauluk92.entity.EntityOfFabularia;
 import it.mauluk92.entity.impl.lever.MachineLever;
+import it.mauluk92.entity.impl.machinery.AncientMachinery;
 import it.mauluk92.entity.impl.machinery.impl.FirstMachine;
 import it.mauluk92.entity.impl.machinery.impl.SecondMachine;
 import it.mauluk92.entity.impl.machinery.impl.ThirdMachine;
-import it.mauluk92.gateway.LifeGateway;
 import it.mauluk92.state.State;
 import it.mauluk92.state.impl.AndState;
 import it.mauluk92.state.impl.LifeState;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@Import(FirstNodeCommandConfig.class)
+@Import(MachineNodeCommandConfig.class)
 public class FirstMachineryConfig {
 
 
@@ -28,10 +28,11 @@ public class FirstMachineryConfig {
     @Bean
     @Qualifier("firstMachine")
     public EntityOfFabularia firstMachine(@Qualifier("firstMachineState") State firstMachineState){
-        EntityOfFabularia machine = new FirstMachine();
+        AncientMachinery machine = new FirstMachine();
+        machine.setName("First Machine");
         String description = "The first machine of the control room";
         machine.setChildren(new ArrayList<>());
-        machine.setLock(firstMachineState);
+        machine.setState(firstMachineState);
         machine.setDescription(description);
         return machine;
     }
@@ -39,20 +40,22 @@ public class FirstMachineryConfig {
     @Bean
     @Qualifier("secondMachine")
     public EntityOfFabularia secondMachine(@Qualifier("secondMachineState") State secondMachineState){
-        EntityOfFabularia machine = new SecondMachine();
+        AncientMachinery machine = new SecondMachine();
+        machine.setName("Second Machine");
         String description = "The second machine of the control room";
         machine.setDescription(description);
         machine.setChildren(new ArrayList<>());
-        machine.setLock(secondMachineState);
+        machine.setState(secondMachineState);
         return machine;
     }
 
     @Bean
     @Qualifier("thirdMachine")
     public EntityOfFabularia thirdMachine(@Qualifier("thirdMachineState") State thirdMachineState){
-        EntityOfFabularia machine = new ThirdMachine();
+        AncientMachinery machine = new ThirdMachine();
+        machine.setName("Third Machine");
         String description = "The third machine of the control room: connected to the previous two ones";
-        machine.setLock(thirdMachineState);
+        machine.setState(thirdMachineState);
         machine.setChildren(new ArrayList<>());
         machine.setDescription(description);
         return machine;
@@ -84,27 +87,19 @@ public class FirstMachineryConfig {
 
     @Bean
     @Qualifier("firstMachineLever")
-    public EntityOfFabularia firstMachineLever(LifeGateway lifeGateway,
-                                               @Qualifier("firstMachineLeverCommand")Command command){
-        EntityOfFabularia lever = new MachineLever(command, "firstMachineChannel", lifeGateway);
+    public EntityOfFabularia firstMachineLever(@Qualifier("firstMachineRemoteCommand") ManipulateRemoteEntity<AncientMachinery> remoteCommand){
+        EntityOfFabularia lever = new MachineLever();
+        lever.setCommandList(List.of(remoteCommand));
         lever.setDescription("First Lever, connected to the first Machine");
-        LifeState lifeState = new LifeState();
-        lifeState.setState(true);
-        lever.setChildren(new ArrayList<>());
-        lever.setLock(lifeState);
         return lever;
     }
 
     @Bean
     @Qualifier("secondMachineLever")
-    public EntityOfFabularia secondMachineLever(LifeGateway lifeGateway,
-                                                @Qualifier("firstMachineLeverCommand")Command command){
-        EntityOfFabularia lever = new MachineLever(command, "secondMachineChannel", lifeGateway);
+    public EntityOfFabularia secondMachineLever(@Qualifier("secondMachineRemoteCommand") ManipulateRemoteEntity<AncientMachinery> remoteCommand){
+        EntityOfFabularia lever = new MachineLever();
+        lever.setCommandList(List.of(remoteCommand));
         lever.setDescription("Second Lever, connected to the second Machine");
-        LifeState lifeState = new LifeState();
-        lifeState.setState(true);
-        lever.setChildren(new ArrayList<>());
-        lever.setLock(lifeState);
         return lever;
     }
 }
